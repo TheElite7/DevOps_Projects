@@ -42,5 +42,3 @@ spec:
               secretKeyRef:
                 name: mongodb-secret
                 key: mongodb-password
-
-    nodePort: 30303
