@@ -43,18 +43,4 @@ spec:
                 name: mongodb-secret
                 key: mongodb-password
 
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: anand-exp-svc
-spec:
-  selector:
-    app: mongo-exp
-  type: NodePort
-  ports:
-  - protocol: TCP
-    port: 8081
-    targetPort: 8081
     nodePort: 30303
