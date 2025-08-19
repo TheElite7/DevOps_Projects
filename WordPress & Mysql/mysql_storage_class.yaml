@@ -3,4 +3,5 @@ kind: StorageClass
 metadata:
   name: loc-storage
 provisioner: kubernetes.io/no-provisioner
-volumeBindgMode: WaitForFirstConsumer
+
+volumeBindingMode: WaitForFirstConsumer
