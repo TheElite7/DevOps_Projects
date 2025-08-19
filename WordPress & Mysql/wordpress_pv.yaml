@@ -6,7 +6,7 @@ spec:
   storageClassName: local-storage
   claimRef:
     name: wordpress-volume
-    namespcae: default
+    namespace: default
   capacity:
     storage: 5Gi
   accessModes:
@@ -16,8 +16,8 @@ spec:
   nodeAffinity:
     required:
       nodeSelectorTerms:
-      - matchEspressions:
-        - key: kubernetes.io/hostname
-          operator: In
-          values:
-          - node01
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - node01
