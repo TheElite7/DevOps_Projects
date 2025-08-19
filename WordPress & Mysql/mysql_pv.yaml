@@ -5,7 +5,7 @@ metadata:
 spec:
   storageClassName: loc-storage
   claimRef:
-    name: mysql-volume\
+    name: mysql-volume
     namespace: default
   capacity:
     storage: 1Gi
@@ -13,10 +13,10 @@ spec:
     - ReadWriteOnce
   local:
     path: /mnt
-  ndoeAffinity:
+  nodeAffinity:
     required:
       nodeSelectorTerms:
-      - matchEspressions:
+      - matchExpressions:
         - key: kubernetes.io/hostname
           operator: In
           values:
