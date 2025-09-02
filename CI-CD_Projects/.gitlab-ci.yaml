@@ -1,1 +1,78 @@
+# Maual Deployment by using the agent.
 
+stages:
+  - build
+  - image-build
+  - push
+  - deploy
+
+variables:
+  RUNIMG: images
+
+image: docker:cli
+services:
+  - docker:dind
+
+docker-build:
+  image: maven
+  stage: build
+  script:
+    - mvn clean package
+    - ls
+  artifacts:
+    paths:
+      - "target"
+
+docker-image-crt:
+  variables:
+    IMG: vimg
+  stage: image-build
+  script:
+    - docker build -t $IMG:$CI_PIPELINE_ID .
+    - docker $RUNIMG
+    - mkdir demo
+    - docker save $IMG > demo/vimg.tar
+    - pwd
+    - ls 
+  artifacts:
+    paths:
+      - "demo"
+
+docker-test:
+  stage: test
+  script:
+    - docker load -i demo/vimg.tar
+    - docker $RUNIMG
+    - docker run -d -p 8081:8080 vimg:$CI_PIPELINE_ID
+    - docker ps
+docker-push:
+  stage: push
+  script:
+    - docker load -i demo/vimg.tar
+    - docker $RUNIMG
+    - docker tag vimg:$CI_PIPELINE_ID anand2807/maven-war-repo:$CI_PIPELINE_ID
+    - docker login -u $username_demorepo -p $password_demorepo
+    - docker push anand2807/maven-war-repo:$CI_PIPELINE_ID
+    - docker $RUNIMG
+    
+
+docker-deploy:
+  stage: deploy
+  needs:
+    - docker-push
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: [""]
+  before_script:
+    - apt-get update && apt-get install -y sed
+    - |
+      sed -i "s|image:.*|image: anand2807/maven-war-repo:$CI_PIPELINE_ID|" kubernetes/java_maven_deploy.yaml
+  script:
+    - kubectl config use-context learn-group1983734/vprofile-java-app:maven-agent
+    - cat kubernetes/java_maven_secret.yaml
+    - cat kubernetes/java_maven_service.yaml
+    - cat kubernetes/java_maven_deploy.yaml
+    - kubectl apply -f kubernetes/
+    - kubectl rollout status deployment/java_maven_deploy.yaml
+    - sleep 70
+    - kubectl get pods
