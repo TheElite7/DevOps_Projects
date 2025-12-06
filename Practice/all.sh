@@ -38,14 +38,13 @@ EOF
 # Apply deployment
 kubectl apply -f deploy.yaml
 
-echo "Deployment created successfully."
+echo " Deployment Creating Wait for 10 seconds...Waiting 40 seconds..."
+sleep 40
 
-echo "Waiting 40 seconds..."
-sleep 60
 
 kubectl get all -o wide
 
-# # Create the Service - ClusterIP
+# # Create the ClusterIP Service
 # cat > ser.yaml <<EOF
 # apiVersion: v1
 # kind: Service
@@ -67,7 +66,7 @@ kubectl get all -o wide
 # kubectl get svc -o wide
 
 
-# Create the Service - NodePort
+# Create the NodePort Service
 cat > ser.yaml <<EOF
 apiVersion: v1
 kind: Service
@@ -87,8 +86,34 @@ spec:
 EOF
 
 
-echo "Waiting 20 seconds..."
-sleep 20
+echo "NodePort Service Creating Wait for 10 seconds..."
+sleep 10
 
 kubectl create -f ser.yaml
 kubectl get svc -o wide
+
+
+# Create the Load Balancer Service
+cat > lb-svc.yaml <<EOF
+apiVersion: v1
+kind: Service
+metadata:
+  name: websvc
+  labels:
+    app: portfolio
+spec:
+  selector:
+    app: portfolio
+  ports:
+    - name: httpd
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+EOF
+
+echo "Load Balance Service Creating Wati for 10 seconds..."
+sleep 10
+
+kubectl create -f lb-svc.yaml
+kubectl get svc -o wide
+kubectl describe service websvc
