@@ -64,6 +64,10 @@ EOF
 kubectl create -f ser.yaml
 kubectl get svc -o wide
 
+# Install the ingress controller in killercoda.
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+
+
 # Create the Ingress Controller
 cat > ing.yaml <<EOF
 
