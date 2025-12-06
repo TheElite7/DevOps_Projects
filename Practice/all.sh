@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
         - name: portfo-cont
-          image: theberu/practive:v2
+          image: theberu/practice:v2
 EOF
 
 # Apply deployment
