@@ -70,20 +70,24 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main
 
 # Create the Ingress Controller
 cat > ing.yaml <<EOF
-
-apiVersion: v1
-kind: Service
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: portfolio-svc
-  labels:
-    app: portfolio
+  name: portfolio-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  type: ClusterIP
-  selector:
-    app: portfolio
-  ports:
-    - port: 80
-      targetPort: 80
+  rules:
+  - host: portfolio.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: websvc
+            port:
+              number: 80
 EOF
 
 # Create the ingress controller
