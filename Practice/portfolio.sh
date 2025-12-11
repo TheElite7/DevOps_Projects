@@ -106,3 +106,9 @@ EOF
 kubectl create -f ing.yaml
 kubectl get ingress -o wide
 kubectl get all -o wide
+
+
+# TLS Certificate creation for
+
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -out scrt.crt -keyout skey.key -subj "/CN=domain.com/0=certificate"
+kubectl create secret tls sec-tls-ing --namespace default --key skey.key --cert scrt.crt
