@@ -45,9 +45,9 @@ kubectl get all -o wide
 
 
 # instsall metalb for loadbalancing
-echo " configuring Local Loadbalancer... "
-sleep 10
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.15.3/config/manifests/metallb-frr.yaml
+# echo " configuring Local Loadbalancer... "
+# sleep 10
+# kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.15.3/config/manifests/metallb-frr.yaml
 
 
 # Create the ClusterIP Service
@@ -73,7 +73,7 @@ kubectl get svc -o wide
 
 
 # Install the ingress controller setup
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+https://github.com/kubernetes/ingress-nginx.git
 echo"Ingress controller installing..."
 sleep 15
 
@@ -110,5 +110,5 @@ kubectl get all -o wide
 
 # TLS Certificate creation for
 
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -out scrt.crt -keyout skey.key -subj "/CN=domain.com/0=certificate"
-kubectl create secret tls sec-tls-ing --namespace default --key skey.key --cert scrt.crt
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -out sslcertificate.crt -keyout sslkey.key -subj "/CN=domain.com/0=certificate"
+kubectl create secret tls sec-tls-ing --namespace default --key sslkey.key --cert sslcertificate
