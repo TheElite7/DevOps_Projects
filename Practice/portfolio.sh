@@ -74,7 +74,8 @@ kubectl get svc -o wide
 
 # Install the ingress controller setup
 https://github.com/kubernetes/ingress-nginx.git
-echo"Ingress controller installing..."
+kubectl create -f /root/ingress-nginx/deploy/static/provider/aws/deploy.yaml
+echo "Ingress controller installing..."
 sleep 15
 
 kubectl get ns
@@ -90,6 +91,11 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
+  tls:
+   - hosts:
+      - spe.portfolio.com
+     secretName: sec-tls-ing
+
   rules:
   - host: portfolio.example.com
     http:
@@ -112,3 +118,8 @@ kubectl get all -o wide
 
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -out sslcertificate.crt -keyout sslkey.key -subj "/CN=domain.com/0=certificate"
 kubectl create secret tls sec-tls-ing --namespace default --key sslkey.key --cert sslcertificate
+
+kubectl get secrets 
+
+# Portforwarding 
+kubectl port-forward -n ingress-nginx ingress-nginx-controller-59bc454dc9-2k7xr 80:8080
