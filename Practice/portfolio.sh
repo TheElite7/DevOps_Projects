@@ -78,7 +78,7 @@ echo"Ingress controller installing..."
 sleep 15
 
 kubectl get ns
-kubectl ns ingress-nginx get svc -o wide
+kubectl -n ingress-nginx get svc -o wide
 
 
 # Create the Ingress Controller
